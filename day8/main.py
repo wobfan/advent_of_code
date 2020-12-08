@@ -7,7 +7,7 @@ for line in cmds:
 for part in splitted_cmds:
     part[1] = part[1].rstrip("\n")
 
-acc = 5
+acc = 0
 
 executed = []
 
@@ -17,10 +17,10 @@ while i in range(0, len(splitted_cmds)):
     op = cmd[0]
     val = int(cmd[1])
 
-    if "%s %d" % (op, val) in executed:
-        print("would run instruction '%s %d' twice now. accumulator is %d." % (op, val, acc))
+    if i in executed:
+        print("would run instruction '%d' twice now. accumulator is %d." % (i, acc))
         exit(0)
-    executed.append("%s %d" % (op, val))
+    executed.append(i)
 
     if op == "jmp":
         i = i + val
