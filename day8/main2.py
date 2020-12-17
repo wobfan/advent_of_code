@@ -7,35 +7,49 @@ for line in cmds:
 for part in splitted_cmds:
     part[1] = part[1].rstrip("\n")
 
+original_splitted_cmds = splitted_cmds.copy()
 
-    acc = 0
-    fixed = False
+# put all NOPs and JMPs into a list to iterate through them when changing them one after one
+jmpList = []
+nopList = []
+for i in range(0, len(splitted_cmds)):
+    if splitted_cmds[i][0] == 'jmp':
+        jmpList.append(i)
+    if splitted_cmds[i][0] == 'nop':
+        nopList.append(i)
+nextJMP = jmpList[0]
+nextNOP = nopList[0]
+
+while(True):
+    if nextNOP == nopList[len(nopList)-1] and nextJMP == jmpList[len(jmpList)-1]:
+        exit(0)
+    elif nextJMP == jmpList[len(jmpList)-1]:
+        splitted_cmds[nextNOP][0] = 'jmp'
+        nextNOP += 1
+    else:
+        splitted_cmds[nextJMP][0] = 'nop'
+        nextJMP += 1
+
+    splitted_cmds = original_splitted_cmds.copy()
     executed = []
-
+    acc = 0
     i = 0
-    while i in range(0, len(splitted_cmds)+1):
+    while i in range(0, len(splitted_cmds)):
         cmd = splitted_cmds[i]
         op = cmd[0]
         val = int(cmd[1])
 
-        if fixed is not True:
-            if i in executed and op == 'jmp':
-                print("at #%d i would run a jmp twice now. changing it to a nop." % (i))
-                op = 'nop'
-                splitted_cmds[i][0] = 'nop'
-                fixed = True
-            executed.append(i)
+        if i in executed:
+            break
+        executed.append(i)
 
         if op == "jmp":
             i = i + val
         if op == "nop":
-            if i+val == len(splitted_cmds):
-                print("nop at line %d should be a jmp to termination line (which is the line after the last)" % i)
             i = i + 1
         if op == "acc":
             acc = acc + val
             i = i + 1
-        
+
         if i == len(splitted_cmds):
-            print("terminateed successful. acc is %d." % acc)
-            exit(0)
+            print("terminated successfully. acc is %d." % acc)

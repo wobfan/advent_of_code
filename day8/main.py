@@ -1,4 +1,4 @@
-f = open("advent_of_code/day8/input.txt", "r")
+f = open("day8/input.txt", "r")
 cmds = f.readlines()
 splitted_cmds = []
 
