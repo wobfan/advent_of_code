@@ -15,13 +15,14 @@ class Bag():
             return True
         else:
             for recursiveBag in self.bagContains:
-                return recursiveBag.contains(bag)
+                if recursiveBag.contains(bag):
+                    return True
             return False
 
 
 bags = {}
 
-f = open("advent_of_code/day7/input.sql")
+f = open("day7/input.sql")
 lines = f.readlines()
 
 for line in lines:
